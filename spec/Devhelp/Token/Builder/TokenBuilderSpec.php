@@ -33,14 +33,22 @@ class TokenBuilderSpec extends ObjectBehavior
         $expiresAt = new \DateTime('2000-01-04');
         $usages = 0;
 
+        $definition->getClass()->willReturn('Devhelp\Token\Token');
         $definition->getType()->willReturn($type);
         $definition->getTtl()->willReturn('3 days');
         $definition->getUsages()->willReturn($usages);
         $definition->getHashAlgorithm()->willReturn('test_alg');
 
-        $token = $this->setBaseDate($baseDate)
-                      ->build($definition)
-                      ->shouldReturnTokenWith($type, $expiresAt, $usages, $this->hash);
+        $this->setBaseDate($baseDate)
+             ->build($definition)
+             ->shouldReturnTokenWith($type, $expiresAt, $usages, $this->hash);
+    }
+
+    function it_throws_an_exception_if_token_class_is_not_an_instance_of_DevhelpTokenToken(TokenDefinition $definition)
+    {
+        $definition->getClass()->willReturn('\stdClass');
+
+        $this->shouldThrow('\InvalidArgumentException')->duringBuild($definition);
     }
 
     public function getMatchers()

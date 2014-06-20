@@ -45,11 +45,22 @@ class TokenBuilder
      */
     public function build(TokenDefinition $definition)
     {
-        $token = new Token();
+        $token = $this->getToken($definition->getClass());
         $token->setType($definition->getType());
         $token->setHash($this->generateHash($definition->getHashAlgorithm()));
         $token->setUsages($definition->getUsages());
         $token->setExpiresAt($this->calculateExpirationDate($definition->getTtl()));
+
+        return $token;
+    }
+
+    protected function getToken($class)
+    {
+        $token = new $class();
+
+        if (! ($token instanceof Token)) {
+            throw new \InvalidArgumentException('Token must be instance of \Devhelp\Token\Token');
+        }
 
         return $token;
     }

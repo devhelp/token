@@ -11,6 +11,11 @@ class TokenDefinition
     protected $type;
 
     /**
+     * @var string
+     */
+    protected $class;
+
+    /**
      * @var integer
      */
     protected $usages;
@@ -41,6 +46,24 @@ class TokenDefinition
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @param string $class
+     * @return TokenDefinition
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
     }
 
     /**
@@ -103,6 +126,10 @@ class TokenDefinition
      */
     public function merge(TokenDefinition $definition)
     {
+        if ($definition->getClass() && $this->class === null) {
+            $this->class = $definition->getClass();
+        }
+
         if ($definition->getHashAlgorithm() && $this->hashAlgorithm === null) {
             $this->hashAlgorithm = $definition->getHashAlgorithm();
         }
